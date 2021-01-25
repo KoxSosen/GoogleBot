@@ -2,9 +2,11 @@ import discord
 from discord.ext import commands
 from googlesearch import search 
 
-bot = commands.Bot(command_prefix = '', case_insensitive=True)
+bot = commands.Bot(command_prefix = '.', case_insensitive=True)
                   
+load_dotenv()
 
+token = os.getenv('token')
 
 @bot.event
 async def on_ready():
@@ -14,12 +16,13 @@ async def on_ready():
     
 
 @bot.command()
-async def find(ctx,*, query):
+async def g(ctx,*, query):
     author = ctx.author.mention
     await ctx.channel.send(f"Here are the links related to your question {author} !") 
     async with ctx.typing(): 
-        for j in search(query, tld="co.in", num=10, stop=10, pause=2):
+        for j in search(query, tld="co.in", num=1, stop=1, pause=2):
             await ctx.send(f"\n:point_right: {j}") 
+            
 #async def g(ctx, arg):
      #   searchContent = ""
        # text = str(arg).split(' ')
@@ -40,6 +43,7 @@ async def find(ctx,*, query):
 async def on_message(message):
     content = message.content.lower()
     if "trash bot" in content or "bot trash" in content:
-        await message.channel.send(f"No ur trash kid {message.author.mention}")      
+        await message.channel.send(f"No ur trash kid {message.author.mention}")   
+        await bot.process_commands(message)
 
-bot.run("token")
+bot.run(token)
